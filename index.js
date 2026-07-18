@@ -4,21 +4,38 @@ const taskContainer = document.getElementById("task-container")
 const taskList = document.getElementById("task-list")
 
 let tasksArr = []
+let taskIdCounter = 0
 
 addTaskBtn.addEventListener('click', function(){
     if (taskInputEl.value){
-        tasksArr.push(taskInputEl.value)
+        let newTask = {id: taskIdCounter++, text: taskInputEl.value, completed: false}
+        tasksArr.push(newTask)
         taskInputEl.value = ''
+        renderTasks()
     }
-    renderTasks()
+})
+
+taskContainer.addEventListener('click', function(e){
+    if (e.target.classList.contains("complete-task-btn")){
+        let taskId = e.target.parentElement.id
+        tasksArr.forEach(task => {
+            if (task.id === Number(taskId)){task.completed = !task.completed}
+        })
+        e.target.parentElement.classList.toggle("completed")
+        renderTasks()
+    }
+    else if (e.target.classList.contains("delete-task-btn")){
+        let taskId = e.target.parentElement.id
+        tasksArr = tasksArr.filter(task => task.id !== Number(taskId))
+        renderTasks()
+    }
 })
 
 function renderTasks() {
     let taskHtml = ''
-    tasksArr.map(task => {
-        taskHtml += `<li class="task">${task}</li>`
-    }).join()
-    console.log(taskHtml)
+    taskHtml = tasksArr.map(task => {
+        return `<li class="task ${task.completed ? 'completed' : ''}" id="${task.id}">${task.text}<button class="complete-task-btn">Complete Task</button><button class="delete-task-btn">Delete Task</button></li>`
+    }).join('')
     taskList.innerHTML = taskHtml
     if (taskHtml && taskList.classList.contains('hidden')){taskList.classList.toggle('hidden')}
 }
