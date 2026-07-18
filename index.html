@@ -1,10 +1,24 @@
 <!DOCTYPE html>
-    <html lang="en">
-        <header>
-            <meta charset="utf-8">
-            <title>Task Manager</title>
-        </header>
-        <body>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Task Manager</title>
+        <link rel="stylesheet" href="styles.css">
+    </head>
+    <body>
+        <div class="header">
             <h1 id="title">Task Manager Project</h1>
-        </body>
-    </html>
+        </div>
+        <div class="container" id="new-task-container">
+            <label for="new-task-input">Create new task: </label>
+            <input type="text" id="new-task-input">
+            <button class="btn" id="add-task-btn">Add Task</button>
+        </div>
+        <div class="container" id="task-container">
+            <ul class="hidden" id="task-list">
+            </ul>
+        </div>
+        <script src="index.js"></script>
+    </body>
+</html>
