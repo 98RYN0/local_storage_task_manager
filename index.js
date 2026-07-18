@@ -21,7 +21,6 @@ taskContainer.addEventListener('click', function(e){
         tasksArr.forEach(task => {
             if (task.id === Number(taskId)){task.completed = !task.completed}
         })
-        e.target.parentElement.classList.toggle("completed")
         renderTasks()
     }
     else if (e.target.classList.contains("delete-task-btn")){
