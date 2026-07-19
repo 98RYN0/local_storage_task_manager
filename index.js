@@ -3,12 +3,10 @@ const addTaskBtn = document.getElementById("add-task-btn")
 const taskContainer = document.getElementById("task-container")
 const taskList = document.getElementById("task-list")
 
-const storedData = localStorage.getItem('tasks')
 let taskArr = []
-let taskIdCounter = 1
+let taskIdCounter = 0
 getStoredData()
 renderTasks()
-console.log(taskArr)
 
 
 addTaskBtn.addEventListener('click', function(){
@@ -16,7 +14,7 @@ addTaskBtn.addEventListener('click', function(){
         let newTask = {id: taskIdCounter++, text: taskInputEl.value, completed: false}
             taskArr.push(newTask)
             taskInputEl.value = ''
-            saveData(newTask.id, newTask)
+            saveData()
             renderTasks()
     }
 })
@@ -27,7 +25,7 @@ taskContainer.addEventListener('click', function(e){
         taskArr.forEach(task => {
             if (task.id === Number(taskId)){
                 task.completed = !task.completed
-                saveData(task.id, task)
+                saveData()
             }
         })
         renderTasks()
@@ -35,20 +33,21 @@ taskContainer.addEventListener('click', function(e){
     else if (e.target.classList.contains("delete-task-btn")){
         let taskId = e.target.parentElement.id
         taskArr = taskArr.filter(task => task.id !== Number(taskId))
-        localStorage.removeItem('task '+ taskId)
-        taskIdCounter--
-        renderTasks()
+        if (taskArr.length >= 1){saveData(); renderTasks()}
+        else {localStorage.clear(); renderTasks()}  
     }
 })
 
-function saveData(key, value) {
-    localStorage.setItem('task '+ key, JSON.stringify(value))
+function saveData() {
+    localStorage.setItem('tasks', JSON.stringify(taskArr))
 }
 
 function getStoredData() {
-    const keys = Object.keys(localStorage)
-    taskArr = keys.map(key => JSON.parse(localStorage.getItem(key)))
-    if (taskArr.length > 0) {taskIdCounter = taskArr.length++}
+    const stored = localStorage.getItem('tasks')
+    if (stored) {
+        taskArr = JSON.parse(stored)
+        taskIdCounter = taskArr.length > 0 ? Math.max(...taskArr.map(task => task.id))+1 : 0
+    }
 }
 
 function renderTasks() {
