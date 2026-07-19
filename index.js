@@ -5,7 +5,7 @@ const taskList = document.getElementById("task-list")
 
 const storedData = localStorage.getItem('tasks')
 let taskArr = []
-let taskIdCounter = 0
+let taskIdCounter = 1
 getStoredData()
 renderTasks()
 console.log(taskArr)
@@ -16,7 +16,7 @@ addTaskBtn.addEventListener('click', function(){
         let newTask = {id: taskIdCounter++, text: taskInputEl.value, completed: false}
             taskArr.push(newTask)
             taskInputEl.value = ''
-            localStorage.setItem('task ' + newTask.id, JSON.stringify(newTask))
+            saveData(newTask.id, newTask)
             renderTasks()
     }
 })
@@ -25,7 +25,10 @@ taskContainer.addEventListener('click', function(e){
     if (e.target.classList.contains("complete-task-btn")){
         let taskId = e.target.parentElement.id
         taskArr.forEach(task => {
-            if (task.id === Number(taskId)){task.completed = !task.completed}
+            if (task.id === Number(taskId)){
+                task.completed = !task.completed
+                saveData(task.id, task)
+            }
         })
         renderTasks()
     }
@@ -38,10 +41,14 @@ taskContainer.addEventListener('click', function(e){
     }
 })
 
+function saveData(key, value) {
+    localStorage.setItem('task '+ key, JSON.stringify(value))
+}
+
 function getStoredData() {
     const keys = Object.keys(localStorage)
     taskArr = keys.map(key => JSON.parse(localStorage.getItem(key)))
-    if (taskArr.length > 0) {taskIdCounter = taskArr.length}
+    if (taskArr.length > 0) {taskIdCounter = taskArr.length++}
 }
 
 function renderTasks() {
